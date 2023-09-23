@@ -20,5 +20,17 @@ sonarcloud-check:
     - sonar-scanner
   only:
     variables:
+      - $EXECUTAR == "only1" #"deploy"
+      - $EXECUTAR == "only2" #"qualidade"
+
+Verificar Compose:
+  stage: qualidade
+  only:
+    variables:
       - $EXECUTAR == "deploy"
       - $EXECUTAR == "qualidade"
+  tags:
+    - shell
+  script:
+    - docker-compose config -q
+    - echo $?
