@@ -21,17 +21,14 @@ sonarcloud-check:
       - .sonar/cache
   script:
     - sonar-scanner
-  only:
-    variables:
-      - $EXECUTAR == "only1" #"deploy"
-      - $EXECUTAR == "only2" #"qualidade"
-
-Verificar Compose:
-  stage: qualidade
-  only:
+  only: &varqualidade
     variables:
       - $EXECUTAR == "deploy"
       - $EXECUTAR == "qualidade"
+
+Verificar Compose:
+  stage: qualidade
+  only: *varqualidade
   tags:
     - shell
   script:
@@ -42,7 +39,7 @@ build:
   stage: build
   tags:
     - shell
-  only:
+  only: &vardeploy
     variables:
       - $EXECUTAR == "deploy"
   script:
@@ -61,9 +58,7 @@ Deploy wordpress:
   stage: deploy
   tags:
     - shell
-  only:
-    variables:
-      - $EXECUTAR == "deploy"
+  only: *vardeploy
   script:
     - sudo chown -R 33:33 /storage/wordpress/html/
     - docker-compose down
@@ -74,9 +69,7 @@ Verificar deploy:
   stage: deploy
   tags:
     - shell
-  only:
-    variables:
-      - $EXECUTAR == "deploy"
+  only: *vardeploy
   dependencies:
     - "Deploy wordpress"
   script:
@@ -88,9 +81,7 @@ Notificar Sucesso:
   stage: notificacao
   tags:
     - shell
-  only:
-    variables:
-      - $EXECUTAR == "deploy"
+  only: *vardeploy
   when: on_success
   script:
     - source notificacaoSucesso.sh
@@ -99,9 +90,7 @@ Notificar Falha:
   stage: notificacao
   tags:
     - shell
-  only:
-    variables:
-      - $EXECUTAR == "deploy"
+  only: *vardeploy
   when: on_failure
   script:
     - source notificacaoFalha.sh
