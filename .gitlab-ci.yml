@@ -1,6 +1,7 @@
 stages:
   - qualidade
   - build
+  - deploy
 
 variables:
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
@@ -54,3 +55,16 @@ build:
           sudo mkdir -p /storage/wordpress/html/
           sudo rsync -avh --progress wordpress/* /storage/wordpress/html/
         fi
+
+Deploy wordpress:
+  stage: deploy
+  tags:
+    - shell
+  only:
+    variables:
+      - $EXECUTAR == "deploy"
+  script:
+    - sudo chown -R 33:33 /storage/wordpress/html/
+    - docker-compose down
+    - sleep 10
+    - docker-compose up -d
