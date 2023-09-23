@@ -40,13 +40,13 @@ Verificar Compose:
 
 build-docker-image:
   image: docker:latest
-    stage: build
-    variables:
-    IMAGE: ${CI_REGISTRY_USER}/simpleapp:latest
-    script:
-      - "docker build -t ${CI_REGISTRY_USER}/simpleapp:latest ."
-      - "docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}"
-      - "docker push ${CI_REGISTRY_USER}/simpleapp:latest"
+  stage: build
+  variables:
+  IMAGE: ${CI_REGISTRY_USER}/simpleapp:latest
+  script:
+    - "docker build -t ${CI_REGISTRY_USER}/simpleapp:latest ."
+    - "docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}"
+    - "docker push ${CI_REGISTRY_USER}/simpleapp:latest"
 
 build:
   stage: build
