@@ -1,5 +1,6 @@
 stages:
   - qualidade
+  - build-docker
   - build
   - deploy
   - notificacao
@@ -37,6 +38,17 @@ Verificar Compose:
   script:
     - docker-compose config -q
     - echo $?
+
+build-docker:
+  image: docker:latest
+  stage: build-docker
+  variables:
+    -image: ${CI_REGISTRY_USER}/simpleapp:latest
+  script:
+    - "docker build -t ${CI_REGISTRY_USER}/simpleapp:latest ."
+    - "docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}"
+    - "docker push ${CI_REGISTRY_USER}/simpleapp:latest"
+
 
 build:
   stage: build
