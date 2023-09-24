@@ -1,7 +1,5 @@
 stages:
   - qualidade
-  - build-docker
-  - push-docker
   - build
   - deploy
   - notificacao
@@ -58,20 +56,6 @@ build:
           sudo mkdir -p /storage/wordpress/html/
           sudo rsync -avh --progress wordpress/* /storage/wordpress/html/
         fi
-
-build-docker:
-  stage: build-docker
-  script:
-    - docker info
-    - docker build -t lnrd0/simpleapp .
-
-push-docker:
-  stage: push-docker
-  before_script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD"
-  script:
-    - docker info
-    - docker push lnrd0/simpleapp
 
 Deploy wordpress:
   stage: deploy
